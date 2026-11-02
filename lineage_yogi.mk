@@ -52,13 +52,21 @@ PRODUCT_GMS_CLIENTID_BASE := android-google
 TARGET_SCREEN_HEIGHT := 2342
 TARGET_SCREEN_WIDTH := 1080
 
+# Evolution X's Settings overlay: ExpressiveOS's maintainer (overlay-evolution).
+# PRODUCT_, not DEVICE_PACKAGE_OVERLAYS: generic_system.mk's
+# PRODUCT_ENFORCE_RRO_TARGETS := * makes it an RRO, and a device overlay's goes
+# on /vendor, which is stock here and never built.
+PRODUCT_PACKAGE_OVERLAYS += device/google/yogi/overlay-evolution
+
 # Evolution X
 WITH_GMS := true
 TARGET_HAS_UDFPS := false
-TARGET_INCLUDE_BOOT_ANIMATIONS := true
+# Only ExpressiveOS's own animation (vendor/extra/bootanimation), not Evolution X's
+# other styles (about 190 MiB in /product/media). Product config reads this file
+# before the ones it inherits, so this wins over vendor/lineage's common.mk default
+# (?= true) for every build of this tree.
+TARGET_INCLUDE_BOOT_ANIMATIONS := false
 TARGET_ENABLE_BLUR := true
-# Bring-up only: tolerate missing product packages
-TARGET_DISABLE_EPPE := true
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     BuildDesc="yogi-user 17 CD1A.261005.003 16262255 release-keys" \
